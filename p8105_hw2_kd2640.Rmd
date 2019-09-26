@@ -1,0 +1,53 @@
+---
+title: "Homework 2"
+author: "Keyanna Davis"
+date: "9/25/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+
+#Problem 1
+
+```{r}
+mr_trash_wheel = readxl::read_excel("./data/trash_wheel.xlsx")
+janitor::clean_names(mr_trash_wheel)
+```
+
+
+
+
+
+
+
+#Problem 2
+
+```{r}
+pols_month = read_csv("./data/fivethirtyeight_datasets/pols-month.csv") %>% 
+janitor::clean_names()
+
+snp = read_csv("./data/fivethirtyeight_datasets/snp.csv") %>% 
+janitor::clean_names()
+
+
+unemployment = read_csv("./data/fivethirtyeight_datasets/unemployment.csv") %>% 
+  janitor::clean_names()
+```
+
+
+
+
+##Prblem 3
+
+```{r}
+baby_names = read_csv("./data/Popular_Baby_Names.csv") %>% 
+  janitor::clean_names()
+```
+
+
+
