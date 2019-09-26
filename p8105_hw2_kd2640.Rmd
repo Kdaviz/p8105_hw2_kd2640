@@ -15,8 +15,19 @@ library(tidyverse)
 #Problem 1
 
 ```{r}
-mr_trash_wheel = readxl::read_excel("./data/trash_wheel.xlsx")
-janitor::clean_names(mr_trash_wheel)
+mr_trash_wheel = readxl::read_excel("./data/trash_wheel.xlsx",
+                                    sheet=1) %>% 
+janitor::clean_names()
+
+pdata_17 = readxl::read_excel("./data/trash_wheel.xlsx",
+                                    sheet=4) %>% 
+janitor::clean_names()
+
+
+pdata_18 = readxl::read_excel("./data/trash_wheel.xlsx",
+                                    sheet=3) %>% 
+janitor::clean_names()
+
 ```
 
 
