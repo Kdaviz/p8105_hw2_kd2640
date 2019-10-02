@@ -20,29 +20,31 @@ mr_trash_wheel = readxl::read_excel("./data/trash_wheel.xlsx",
   janitor::clean_names() %>% 
   select(-x15,-x16,-x17) %>% 
   drop_na() %>% 
-  mutate(
-    sports_balls=round(sports_balls),
-    as.integer(sports_balls))
- 
+mutate(
+  sports_balls=round(sports_balls),
+  sports_balls=as.integer(sports_balls)
+)
+    
 
  
 pdata_17 = readxl::read_excel("./data/trash_wheel.xlsx",
-                                    sheet=4) %>% 
+                                    sheet=6, skip = 1) %>% 
 janitor::clean_names() %>% 
 drop_na() %>% 
-  mutate(.data=., year=" "
-)
+  mutate(.data=., year="2017"
+) 
 
 
 pdata_18 = readxl::read_excel("./data/trash_wheel.xlsx",
-                                    sheet=3) %>% 
+                                    sheet=5, skip=1) %>% 
 janitor::clean_names() %>% 
 drop_na() %>% 
-  mutate(.data=., year=" "
-)
+  mutate(.data=., year="2018"
+) 
 
 
-pdata = merge(pdata_17, pdata_18, by="year")
+pdata = merge(pdata_17, pdata_18, by="month") %>% 
+  mutate(month = month.name[month] )
     
 ```
 
@@ -71,7 +73,7 @@ janitor::clean_names() %>%
   separate(date, c("month", "day", "year")) %>% 
   mutate(
 month = as.numeric(month),
-month = month.abb[month] ) %>% 
+month = month.abb[month] )%>% 
   select(year, month, everything())
 
 
@@ -79,17 +81,23 @@ unemployment = read_csv("./data/fivethirtyeight_datasets/unemployment.csv") %>%
   janitor::clean_names() %>% 
     pivot_longer(
       jan:dec,
-      names_to="months",
-      values_to = "days"
+      names_to="month",
+      values_to = "day"
     ) %>% 
   mutate(
-     days = round(days),
-     days = as.integer(days)
+     day = round(day),
+     day = as.integer(day)
   )
 
-pols_snp = merge(pols_month, snp, by="year")
+pols_snp = full_join(pols_month, snp, by = c("year"="year", "month"="month")) %>% 
+  mutate(
+    year=as.numeric(year),
+    day=as.integer(day))
+  
 
-pols_snp_unemploy = merge(pols_snp, unemployment, by="year")
+pols_snp_unemploy = full_join(pols_snp, unemployment, by=c( "month"="month", "year"="year", "day"="day")) %>% 
+  drop_na()
+
 ```
 
 
