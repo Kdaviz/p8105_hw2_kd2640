@@ -19,22 +19,32 @@ mr_trash_wheel = readxl::read_excel("./data/trash_wheel.xlsx",
                                 sheet=1)%>%
   janitor::clean_names() %>% 
   select(-x15,-x16,-x17) %>% 
-  drop_na()
-  
-  
+  drop_na() %>% 
+  mutate(
+    sports_balls=round(sports_balls),
+    as.integer(sports_balls))
+ 
 
-
+ 
 pdata_17 = readxl::read_excel("./data/trash_wheel.xlsx",
                                     sheet=4) %>% 
-janitor::clean_names()
+janitor::clean_names() %>% 
+drop_na() %>% 
+  mutate(.data=., year=" "
+)
 
 
 pdata_18 = readxl::read_excel("./data/trash_wheel.xlsx",
                                     sheet=3) %>% 
-janitor::clean_names()
+janitor::clean_names() %>% 
+drop_na() %>% 
+  mutate(.data=., year=" "
+)
 
+
+pdata = merge(pdata_17, pdata_18, by="year")
+    
 ```
-
 
 
 
@@ -44,16 +54,44 @@ janitor::clean_names()
 #Problem 2
 
 ```{r}
+
 pols_month = read_csv("./data/fivethirtyeight_datasets/pols-month.csv") %>% 
-janitor::clean_names()
+janitor::clean_names() %>% 
+  separate(mon, c("year", "month", "day")) %>% 
+  mutate(
+month = as.numeric(month),
+month = month.abb[month] ) %>% 
+  mutate( president=prez_dem+prez_gop) %>% 
+  select(-prez_dem, -prez_gop,-day)
+
+
 
 snp = read_csv("./data/fivethirtyeight_datasets/snp.csv") %>% 
-janitor::clean_names()
+janitor::clean_names() %>% 
+  separate(date, c("month", "day", "year")) %>% 
+  mutate(
+month = as.numeric(month),
+month = month.abb[month] ) %>% 
+  select(year, month, everything())
 
 
 unemployment = read_csv("./data/fivethirtyeight_datasets/unemployment.csv") %>% 
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+    pivot_longer(
+      jan:dec,
+      names_to="months",
+      values_to = "days"
+    ) %>% 
+  mutate(
+     days = round(days),
+     days = as.integer(days)
+  )
+
+pols_snp = merge(pols_month, snp, by="year")
+
+pols_snp_unemploy = merge(pols_snp, unemployment, by="year")
 ```
+
 
 
 
@@ -62,7 +100,14 @@ unemployment = read_csv("./data/fivethirtyeight_datasets/unemployment.csv") %>%
 
 ```{r}
 baby_names = read_csv("./data/Popular_Baby_Names.csv") %>% 
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  distinct() %>% 
+ 
+  mutate(
+  rank = cut(rank, breaks = c(-Inf, 36, 63, Inf),
+                       labels = c("highest", "medium", "lowest"))
+  )
+  
 ```
 
 
