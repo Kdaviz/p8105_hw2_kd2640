@@ -43,13 +43,15 @@ drop_na() %>%
 ) 
 
 
-pdata = merge(pdata_17, pdata_18, by="month") %>% 
+pdata = full_join(pdata_17, pdata_18, by= c("month"="month", "year"="year",
+                                            "total"="total")) %>% 
   mutate(month = month.name[month] )
     
 ```
 
+###Summary of Problem 1
 
-
+The number of observations in Mr. Trash Wheel dataset is `r nrow(mr_trash_wheel)` and `r ncol(mr_trash_wheel)` variables, 2017 Precipation dataset is `r nrow(pdata_17)` observations and `r ncol(pdata_17)` variables, 2018 Precipation dataset is `r nrow(pdata_18)` observations and `r ncol(pdata_18)` variables. The 2017 and 2018 Precipation dataset combined has `r nrow(pdata)` observations and `r ncol(pdata)` variables.
 
 
 
@@ -63,7 +65,12 @@ janitor::clean_names() %>%
   mutate(
 month = as.numeric(month),
 month = month.abb[month] ) %>% 
-  mutate( president=prez_dem+prez_gop) %>% 
+  mutate( 
+  president = recode(prez_gop,
+          '0' = "republican" ,
+          '1' = "democratic")
+  ) %>% 
+
   select(-prez_dem, -prez_gop,-day)
 
 
@@ -91,32 +98,82 @@ unemployment = read_csv("./data/fivethirtyeight_datasets/unemployment.csv") %>%
 
 pols_snp = full_join(pols_month, snp, by = c("year"="year", "month"="month")) %>% 
   mutate(
-    year=as.numeric(year),
-    day=as.integer(day))
+    year=as.numeric(year) 
+    )%>% 
+    select(-day)
+    
   
 
-pols_snp_unemploy = full_join(pols_snp, unemployment, by=c( "month"="month", "year"="year", "day"="day")) %>% 
+pols_snp_unemploy = full_join(pols_snp, unemployment, by=c( "month"="month", "year"="year")) %>% 
+  select(-day) %>% 
   drop_na()
 
 ```
 
 
 
+###Summary of Problem 2
 
 
-##Problem 3
 
-```{r}
+
+#Problem 3
+
+```{r problem 3}
 baby_names = read_csv("./data/Popular_Baby_Names.csv") %>% 
   janitor::clean_names() %>% 
-  distinct() %>% 
- 
-  mutate(
-  rank = cut(rank, breaks = c(-Inf, 36, 63, Inf),
-                       labels = c("highest", "medium", "lowest"))
-  )
   
+  mutate(
+   ethnicity = recode(ethnicity, 
+           "ASIAN AND PACIFIC ISLANDER"="ASIAN AND PACI",
+           "BLACK NON HISPANIC" = "BLACK NON HISP",
+           "WHITE NON HISPANIC" = "WHITE NON HISP")
+  ) %>% 
+  mutate(
+    childs_first_name = str_to_upper(childs_first_name)
+  ) %>% 
+distinct()
+
+
+ new_df = filter(baby_names, gender=="FEMALE", childs_first_name=="OLIVIA") %>% 
+   select(-count)
+
+ popular_girl =
+ new_df %>% 
+   select(rank,ethnicity, year_of_birth) %>% 
+  pivot_wider(
+   names_from = year_of_birth,
+   values_from = rank
+ )
+  popular_girl
+  
+  
+  
+  male = filter(baby_names, gender=="MALE", count == max(count)) %>% 
+  select(gender,count,childs_first_name, rank)
+  
+   new_df2 = filter(baby_names, gender=="MALE", childs_first_name=="JAYDEN") %>% 
+   select(-count)
+  
+    popular_guy =
+ new_df2 %>% 
+   select(rank,ethnicity, year_of_birth) %>% 
+  pivot_wider(
+   names_from = year_of_birth,
+   values_from = rank
+ )
+popular_guy
+
+
+
+new_df3 = filter(baby_names, gender=="MALE", ethnicity=="WHITE NON HISP", year_of_birth=="2016") 
+
+
+scatter_plot = ggplot(new_df3, aes(y=count, x=rank))+
+  geom_point()
+scatter_plot
 ```
+
 
 
 
