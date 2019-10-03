@@ -46,12 +46,25 @@ drop_na() %>%
 pdata = full_join(pdata_17, pdata_18, by= c("month"="month", "year"="year",
                                             "total"="total")) %>% 
   mutate(month = month.name[month] )
-    
+   
+
+
+
+sports_balls_2017 = filter(mr_trash_wheel, year == "2017", sports_balls)
+median(pull(sports_balls_2017, sports_balls))
 ```
 
-###Summary of Problem 1
+####Summary of Problem 1
 
-The number of observations in Mr. Trash Wheel dataset is `r nrow(mr_trash_wheel)` and `r ncol(mr_trash_wheel)` variables, 2017 Precipation dataset is `r nrow(pdata_17)` observations and `r ncol(pdata_17)` variables, 2018 Precipation dataset is `r nrow(pdata_18)` observations and `r ncol(pdata_18)` variables. The 2017 and 2018 Precipation dataset combined has `r nrow(pdata)` observations and `r ncol(pdata)` variables.
+The number of observations in`Mr. Trash Wheel` dataset has `r nrow(mr_trash_wheel)` and `r ncol(mr_trash_wheel)` variables. The average of plastic bottles in `Mr. Trash Wheel` is `r mean(pull(mr_trash_wheel, plastic_bottles))`, and the average of cigarette butts is `r mean(pull(mr_trash_wheel, cigarette_butts))` which is fairly a lot of cigarette butts. Also in `Mr. Trash Wheel` dataset the median of sports ball of year 2017 is `r median(pull(sports_balls_2017, sports_balls)) `.
+
+
+In `2017 Precipation` dataset has `r nrow(pdata_17)` observations and `r ncol(pdata_17)` variables. The `total precipation of year 2017` is `r sum(pull(pdata_17, total))`. In `2018 Precipation` dataset has `r nrow(pdata_18)` observations and `r ncol(pdata_18)` variables. The `total precipation of year 2018` is `r sum(pull(pdata_18, total))`. 
+
+
+The `2017 and 2018 Precipation` dataset combined has `r nrow(pdata)` observations and `r ncol(pdata)` variables. The `total precipation of year 2017 and 2018` combined is `r sum(pull(pdata, total))`. 
+
+
 
 
 
@@ -112,7 +125,17 @@ pols_snp_unemploy = full_join(pols_snp, unemployment, by=c( "month"="month", "ye
 
 
 
-###Summary of Problem 2
+####Summary of Problem 2
+The above datasets are ` pols_month, snp, unemployment` and `pols_snp_unemply`, which contains the three datasets combined. The number of observations in `pols_month` dataset has `r nrow(pols_month)` and `r ncol(pols_month)` variables. The years in `pols_month` ranges from `r range(pull(pols_month,year))`. Some key variables in the dataset are `month` and `year`. 
+
+
+In the `snp` dataset their are `r nrow(snp)` observations and `r ncol(snp)` variables. The years in `pols_month` ranges from `r range(pull(snp,year))`. There are some key variables in `snp` dataset which include `month` and `year`.
+
+
+In the `unemployment` dataset their are `r nrow(unemployment)` observations and `r ncol(unemployment)` variables. The years in `unemployment` ranges from `r range(pull(unemployment,year))`. Some key variables in the dataset are `month` and `year`. 
+
+
+In the combined dataset `pols_snp_unemploy` their are `r nrow(pols_snp_unemploy)` observations and `r ncol(pols_snp_unemploy)` variables. This dataset `pols_snp_unemploy` years ranges from `r range(pull(pols_snp_unemploy, year))`. The key variables here are also `month` and `year`.
 
 
 
