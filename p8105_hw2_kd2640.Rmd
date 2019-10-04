@@ -9,6 +9,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
+library(knitr)
 ```
 
 
@@ -172,14 +173,16 @@ distinct()
    names_from = year_of_birth,
    values_from = rank
  )
-  popular_girl
+ 
+popular_girl %>% 
+   knitr::kable()
   
   
   
-  male = filter(baby_names, gender=="MALE", count == max(count)) %>% 
+  male = filter(baby_names, gender=="MALE", rank == min(rank)) %>% 
   select(gender,count,childs_first_name, rank)
   
-   new_df2 = filter(baby_names, gender=="MALE", childs_first_name=="JAYDEN") %>% 
+   new_df2 = filter(baby_names, gender=="MALE", childs_first_name=="ETHAN") %>% 
    select(-count)
   
     popular_guy =
@@ -188,16 +191,17 @@ distinct()
   pivot_wider(
    names_from = year_of_birth,
    values_from = rank
- )
-popular_guy
-
+ ) 
+ popular_guy %>%   
+knitr::kable()
 
 
 new_df3 = filter(baby_names, gender=="MALE", ethnicity=="WHITE NON HISP", year_of_birth=="2016") 
 
 
-scatter_plot = ggplot(new_df3, aes(y=count, x=rank))+
+scatter_plot = ggplot(new_df3, aes(y=count, x=rank ))+
   geom_point()
+
 scatter_plot
 ```
 
